@@ -16,6 +16,7 @@ public:
 
     explicit LRUCache(size_t capacity);
 
+    void clear();
     void erase(const K& key);
     std::optional<V> get(const K& key);
     void put(const K& key, const V& value);

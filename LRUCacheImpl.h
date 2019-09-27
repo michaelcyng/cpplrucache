@@ -12,6 +12,14 @@ LRUCache<K, V>::LRUCache(size_t capacity) : myCapacity(capacity) {
 }
 
 template <typename K, typename V>
+void LRUCache<K, V>::clear() {
+    std::lock_guard<std::mutex> lockGuard(myMutex);
+
+    myKeyValueMap.clear();
+    myValueList.clear();
+}
+
+template <typename K, typename V>
 void LRUCache<K, V>::erase(const K &key) {
     std::lock_guard<std::mutex> lockGuard(myMutex);
 
