@@ -6,9 +6,8 @@
 #define CPPLRUCACHE_LRUCACHE_H
 
 #include <list>
-#include <unordered_map>
-
 #include <optional>
+#include <unordered_map>
 
 template <typename K, typename V>
 class LRUCache {
@@ -22,10 +21,11 @@ public:
 private:
 
     typedef typename std::list<typename std::pair<K, V>> ValueList_t;
+    typedef typename ValueList_t::iterator ValueListIter_t;
 
-    size_t                                                myCapacity;
-    std::unordered_map<K, typename ValueList_t::iterator> myKeyValueMap;
-    ValueList_t                                           myValueList;
+    size_t                                 myCapacity;
+    std::unordered_map<K, ValueListIter_t> myKeyValueMap;
+    ValueList_t                            myValueList;
 
 };
 
