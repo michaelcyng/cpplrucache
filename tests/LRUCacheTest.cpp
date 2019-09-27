@@ -15,6 +15,20 @@ protected:
 
 };
 
+TEST_F(LRUCacheTests, TestErase) {
+
+    LRUCache<int, int> testCache(2);
+
+    testCache.put(1, 10);
+    testCache.put(2, 20);
+    ASSERT_TRUE(testCache.get(1).has_value());
+    ASSERT_TRUE(testCache.get(2).has_value());
+    testCache.erase(1);
+    ASSERT_FALSE(testCache.get(1).has_value());
+    ASSERT_TRUE(testCache.get(2).has_value());
+
+}
+
 TEST_F(LRUCacheTests, TestGetNothing) {
 
     LRUCache<int, int> testCache(1);

@@ -12,6 +12,23 @@ LRUCache<K, V>::LRUCache(size_t capacity) : myCapacity(capacity) {
 }
 
 template <typename K, typename V>
+void LRUCache<K, V>::erase(const K &key) {
+    std::lock_guard<std::mutex> lockGuard(myMutex);
+
+    auto keyValueIter = myKeyValueMap.find(key);
+
+    // Do nothing if the key does not exist
+    if (keyValueIter == myKeyValueMap.end()) {
+        return;
+    }
+
+    auto ValueListIter = keyValueIter->second;
+    myValueList.erase(ValueListIter);
+    myKeyValueMap.erase(keyValueIter);
+
+}
+
+template <typename K, typename V>
 std::optional<V> LRUCache<K, V>::get(const K& key) {
     std::lock_guard<std::mutex> lockGuard(myMutex);
 
