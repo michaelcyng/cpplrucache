@@ -13,6 +13,8 @@ LRUCache<K, V>::LRUCache(size_t capacity) : myCapacity(capacity) {
 
 template <typename K, typename V>
 std::optional<V> LRUCache<K, V>::get(const K& key) {
+    std::lock_guard<std::mutex> lockGuard(myMutex);
+
     auto keyValueIter = myKeyValueMap.find(key);
 
     // Return nothing as the key is not found
@@ -28,6 +30,7 @@ std::optional<V> LRUCache<K, V>::get(const K& key) {
 
 template <typename K, typename V>
 void LRUCache<K, V>::put(const K &key, const V &value) {
+    std::lock_guard<std::mutex> lockGuard(myMutex);
 
     // If the key is present:
     // 1. Replace the old value in the corresponding value list node

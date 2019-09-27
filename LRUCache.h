@@ -7,6 +7,7 @@
 
 #include <list>
 #include <optional>
+#include <thread>
 #include <unordered_map>
 
 template <typename K, typename V>
@@ -25,6 +26,7 @@ private:
 
     size_t                                 myCapacity;
     std::unordered_map<K, ValueListIter_t> myKeyValueMap;
+    std::mutex                             myMutex;
     ValueList_t                            myValueList;
 
 };
