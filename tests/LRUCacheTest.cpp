@@ -89,6 +89,27 @@ TEST_F(LRUCacheTests, TestPutLogic) {
 
 }
 
+TEST_F(LRUCacheTests, TestRemoveOldest) {
+    LRUCache<int, int> testCache(2);
+
+    ASSERT_NO_THROW(testCache.removeOldest());
+
+    testCache.put(1, 10);
+    testCache.put(2, 20);
+    ASSERT_EQ(testCache.get(1), 10);
+    ASSERT_EQ(testCache.get(2), 20);
+
+    testCache.removeOldest();
+    ASSERT_FALSE(testCache.get(1).has_value());
+    ASSERT_EQ(testCache.get(2), 20);
+
+    testCache.removeOldest();
+    ASSERT_FALSE(testCache.get(1).has_value());
+    ASSERT_FALSE(testCache.get(2).has_value());
+
+    ASSERT_NO_THROW(testCache.removeOldest());
+}
+
 int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();

@@ -76,11 +76,25 @@ void LRUCache<K, V>::put(const K &key, const V &value) {
     // If the number of the elements exceeds the capacity, remove the oldest one (i.e. the one at the front of the
     // value list.
     if (myValueList.size() > myCapacity) {
+        removeOldestImpl();
+    }
+
+}
+
+template <typename K, typename V>
+void LRUCache<K, V>::removeOldest() {
+    std::lock_guard<std::mutex> lockGuard(myMutex);
+
+    removeOldestImpl();
+}
+
+template <typename K, typename V>
+void LRUCache<K, V>::removeOldestImpl() {
+    if (myValueList.size() > 0) {
         auto oldestValueListIter = myValueList.begin();
         myKeyValueMap.erase(oldestValueListIter->first);
         myValueList.erase(oldestValueListIter);
     }
-
 }
 
 #endif //LRUCACHE_LRUCACHEIMPL_H

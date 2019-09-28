@@ -20,8 +20,11 @@ public:
     void erase(const K& key);
     std::optional<V> get(const K& key);
     void put(const K& key, const V& value);
+    void removeOldest();
 
 private:
+
+    void removeOldestImpl(); // This is run without worrying about thread safety issues
 
     typedef typename std::list<typename std::pair<K, V>> ValueList_t;
     typedef typename ValueList_t::iterator ValueListIter_t;
