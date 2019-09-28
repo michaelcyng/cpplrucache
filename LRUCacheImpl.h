@@ -13,7 +13,7 @@ LRUCache<K, V>::LRUCache(size_t capacity) : myCapacity(capacity) {
 
 template <typename K, typename V>
 void LRUCache<K, V>::clear() {
-    std::lock_guard<std::mutex> lockGuard(myMutex);
+    WriteLock_t lockGuard(myMutex);
 
     myKeyValueMap.clear();
     myValueList.clear();
@@ -21,7 +21,7 @@ void LRUCache<K, V>::clear() {
 
 template <typename K, typename V>
 void LRUCache<K, V>::erase(const K &key) {
-    std::lock_guard<std::mutex> lockGuard(myMutex);
+    WriteLock_t lockGuard(myMutex);
 
     auto keyValueIter = myKeyValueMap.find(key);
 
@@ -38,7 +38,7 @@ void LRUCache<K, V>::erase(const K &key) {
 
 template <typename K, typename V>
 std::optional<V> LRUCache<K, V>::get(const K& key) {
-    std::lock_guard<std::mutex> lockGuard(myMutex);
+    WriteLock_t lockGuard(myMutex);
 
     auto keyValueIter = myKeyValueMap.find(key);
 
@@ -54,8 +54,14 @@ std::optional<V> LRUCache<K, V>::get(const K& key) {
 }
 
 template <typename K, typename V>
+size_t LRUCache<K, V>::getNumElements() const noexcept {
+    ReadLock_t sharedLock(myMutex);
+    return myValueList.size();
+}
+
+template <typename K, typename V>
 void LRUCache<K, V>::put(const K &key, const V &value) {
-    std::lock_guard<std::mutex> lockGuard(myMutex);
+    WriteLock_t lockGuard(myMutex);
 
     // If the key is present:
     // 1. Replace the old value in the corresponding value list node
@@ -83,7 +89,7 @@ void LRUCache<K, V>::put(const K &key, const V &value) {
 
 template <typename K, typename V>
 void LRUCache<K, V>::removeOldest() {
-    std::lock_guard<std::mutex> lockGuard(myMutex);
+    WriteLock_t lockGuard(myMutex);
 
     removeOldestImpl();
 }
