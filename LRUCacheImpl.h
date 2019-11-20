@@ -54,6 +54,11 @@ std::optional<V> LRUCache<K, V>::get(const K& key) {
 }
 
 template <typename K, typename V>
+size_t LRUCache<K, V>::getCapacity() const noexcept {
+    return myCapacity;
+}
+
+template <typename K, typename V>
 size_t LRUCache<K, V>::getNumElements() const noexcept {
     ReadLock_t sharedLock(myMutex);
     return myValueList.size();

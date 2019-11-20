@@ -20,6 +20,7 @@ public:
     void             clear();
     void             erase(const K& key);
     std::optional<V> get(const K& key);
+    size_t           getCapacity() const noexcept;
     size_t           getNumElements() const noexcept;
     void             put(const K& key, const V& value);
     void             removeOldest();
