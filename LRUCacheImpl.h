@@ -7,6 +7,8 @@
 
 #include <utility>
 
+#include <Exceptions.h>
+
 template <typename K, typename V>
 LRUCache<K, V>::LRUCache(size_t capacity) : myCapacity(capacity) {
 }
@@ -55,6 +57,7 @@ std::optional<V> LRUCache<K, V>::get(const K& key) {
 
 template <typename K, typename V>
 size_t LRUCache<K, V>::getCapacity() const noexcept {
+    ReadLock_t sharedLock(myMutex);
     return myCapacity;
 }
 
@@ -97,6 +100,34 @@ void LRUCache<K, V>::removeOldest() {
     WriteLock_t lockGuard(myMutex);
 
     removeOldestImpl();
+}
+
+template <typename K, typename V>
+void LRUCache<K, V>::setCapacity(size_t newCapacity) {
+    WriteLock_t lockGuard(myMutex);
+
+    // Capacity remains unchanged
+    if (myCapacity == newCapacity) {
+        return;
+    }
+
+    // Enlarge the cache
+    if (myCapacity < newCapacity) {
+        myCapacity = newCapacity;
+        return;
+    }
+
+    // Disallow zero newCapacity
+    if (newCapacity == 0) {
+        throw ZeroCapacityException();
+    }
+
+    // Shrink the cache
+    size_t numItemsToRemove = myCapacity - newCapacity;
+    for (size_t i = 0; i < numItemsToRemove; ++i) {
+        removeOldestImpl();
+    }
+    myCapacity = newCapacity;
 }
 
 template <typename K, typename V>

@@ -126,6 +126,48 @@ TEST_F(LRUCacheTests, TestRemoveOldest) {
     ASSERT_EQ(testCache.getNumElements(), 0);
 }
 
+TEST_F(LRUCacheTests, TestSetCapacity) {
+    LRUCache<int, int> testCache(2);
+
+    ASSERT_EQ(testCache.getCapacity(), 2);
+    ASSERT_EQ(testCache.getNumElements(), 0);
+
+    testCache.put(1, 10);
+    testCache.put(2, 20);
+    ASSERT_EQ(testCache.get(1), 10);
+    ASSERT_EQ(testCache.get(2), 20);
+    ASSERT_EQ(testCache.getNumElements(), 2);
+    ASSERT_EQ(testCache.getCapacity(), 2);
+
+    testCache.setCapacity(2);
+    ASSERT_EQ(testCache.get(1), 10);
+    ASSERT_EQ(testCache.get(2), 20);
+    ASSERT_EQ(testCache.getNumElements(), 2);
+    ASSERT_EQ(testCache.getCapacity(), 2);
+
+    testCache.setCapacity(3);
+    ASSERT_EQ(testCache.get(1), 10);
+    ASSERT_EQ(testCache.get(2), 20);
+    ASSERT_EQ(testCache.getNumElements(), 2);
+    ASSERT_EQ(testCache.getCapacity(), 3);
+
+    testCache.put(3, 30);
+    ASSERT_EQ(testCache.get(1), 10);
+    ASSERT_EQ(testCache.get(2), 20);
+    ASSERT_EQ(testCache.get(3), 30);
+    ASSERT_EQ(testCache.getNumElements(), 3);
+    ASSERT_EQ(testCache.getCapacity(), 3);
+
+    testCache.setCapacity(1);
+    ASSERT_FALSE(testCache.get(1).has_value());
+    ASSERT_FALSE(testCache.get(2).has_value());
+    ASSERT_EQ(testCache.get(3), 30);
+    ASSERT_EQ(testCache.getNumElements(), 1);
+    ASSERT_EQ(testCache.getCapacity(), 1);
+
+    ASSERT_THROW(testCache.setCapacity(0), ZeroCapacityException);
+}
+
 int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();

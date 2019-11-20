@@ -24,6 +24,7 @@ public:
     size_t           getNumElements() const noexcept;
     void             put(const K& key, const V& value);
     void             removeOldest();
+    void             setCapacity(size_t newCapacity);
 
 private:
 
