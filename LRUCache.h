@@ -5,11 +5,12 @@
 #ifndef CPPLRUCACHE_LRUCACHE_H
 #define CPPLRUCACHE_LRUCACHE_H
 
-#include <list>
 #include <optional>
 #include <shared_mutex>
 #include <thread>
-#include <unordered_map>
+
+template <typename K, typename V>
+class NonThreadSafeLRUCache;
 
 template <typename K, typename V>
 class LRUCache {
@@ -28,17 +29,11 @@ public:
 
 private:
 
-    void removeOldestImpl(); // This is run without worrying about thread safety issues
+    typedef std::shared_lock<std::shared_mutex> ReadLock_t;
+    typedef std::lock_guard<std::shared_mutex>  WriteLock_t;
 
-    typedef std::shared_lock<std::shared_mutex>          ReadLock_t;
-    typedef typename std::list<typename std::pair<K, V>> ValueList_t;
-    typedef typename ValueList_t::iterator               ValueListIter_t;
-    typedef std::lock_guard<std::shared_mutex>           WriteLock_t;
-
-    size_t                                 myCapacity;
-    std::unordered_map<K, ValueListIter_t> myKeyValueMap;
-    mutable std::shared_mutex              myMutex;
-    ValueList_t                            myValueList;
+    NonThreadSafeLRUCache<K, V> myInternalCache;
+    mutable std::shared_mutex   myMutex;
 
 };
 
