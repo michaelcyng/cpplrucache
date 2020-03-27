@@ -17,7 +17,7 @@ protected:
 
 TEST_F(LRUCacheTests, TestClear) {
 
-    LRUCache<int, int> testCache(2);
+    LRUCache::LRUCache<int, int> testCache(2);
 
     testCache.put(1, 10);
     testCache.put(2, 20);
@@ -34,7 +34,7 @@ TEST_F(LRUCacheTests, TestClear) {
 
 TEST_F(LRUCacheTests, TestErase) {
 
-    LRUCache<int, int> testCache(2);
+    LRUCache::LRUCache<int, int> testCache(2);
 
     testCache.put(1, 10);
     testCache.put(2, 20);
@@ -51,7 +51,7 @@ TEST_F(LRUCacheTests, TestErase) {
 
 TEST_F(LRUCacheTests, TestGetNothing) {
 
-    LRUCache<int, int> testCache(1);
+    LRUCache::LRUCache<int, int> testCache(1);
     ASSERT_FALSE(testCache.get(1).has_value());
     ASSERT_EQ(testCache.getNumElements(), 0);
 
@@ -59,7 +59,7 @@ TEST_F(LRUCacheTests, TestGetNothing) {
 
 TEST_F(LRUCacheTests, TestPutLogic) {
 
-    LRUCache<int, int> testCache(3);
+    LRUCache::LRUCache<int, int> testCache(3);
 
     testCache.put(1, 10);
     ASSERT_EQ(testCache.get(1), 10);
@@ -101,7 +101,7 @@ TEST_F(LRUCacheTests, TestPutLogic) {
 }
 
 TEST_F(LRUCacheTests, TestRemoveOldest) {
-    LRUCache<int, int> testCache(2);
+    LRUCache::LRUCache<int, int> testCache(2);
 
     ASSERT_NO_THROW(testCache.removeOldest());
     ASSERT_EQ(testCache.getNumElements(), 0);
@@ -127,7 +127,7 @@ TEST_F(LRUCacheTests, TestRemoveOldest) {
 }
 
 TEST_F(LRUCacheTests, TestSetCapacity) {
-    LRUCache<int, int> testCache(2);
+    LRUCache::LRUCache<int, int> testCache(2);
 
     ASSERT_EQ(testCache.getCapacity(), 2);
     ASSERT_EQ(testCache.getNumElements(), 0);
@@ -165,7 +165,7 @@ TEST_F(LRUCacheTests, TestSetCapacity) {
     ASSERT_EQ(testCache.getNumElements(), 1);
     ASSERT_EQ(testCache.getCapacity(), 1);
 
-    ASSERT_THROW(testCache.setCapacity(0), ZeroCapacityException);
+    ASSERT_THROW(testCache.setCapacity(0), LRUCache::ZeroCapacityException);
 }
 
 int main(int argc, char **argv) {

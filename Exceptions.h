@@ -7,33 +7,37 @@
 
 #include <exception>
 
-class LRUCacheExceptionBase: public std::exception {
-public:
+namespace LRUCache {
 
-    LRUCacheExceptionBase(const std::string& message): myMessage(message) {};
-    virtual ~LRUCacheExceptionBase() = default;
+    class LRUCacheExceptionBase : public std::exception {
+    public:
 
-    virtual const char* what() const noexcept {
-        return myMessage.c_str();
-    }
+        LRUCacheExceptionBase(const std::string &message) : myMessage(message) {};
 
-private:
+        virtual ~LRUCacheExceptionBase() = default;
 
-    std::string myMessage;
+        virtual const char *what() const noexcept {
+            return myMessage.c_str();
+        }
 
-};
+    private:
 
-class ZeroCapacityException: public LRUCacheExceptionBase {
-public:
+        std::string myMessage;
 
-    ZeroCapacityException():
-    LRUCacheExceptionBase("Attempt to resize the capacity to zero") {}
+    };
 
-private:
+    class ZeroCapacityException : public LRUCacheExceptionBase {
+    public:
 
-    std::string myErrorMessage;
+        ZeroCapacityException() :
+                LRUCacheExceptionBase("Attempt to resize the capacity to zero") {}
 
-};
+    private:
 
+        std::string myErrorMessage;
+
+    };
+
+}
 
 #endif //LRUCACHE_EXCEPTIONS_H
